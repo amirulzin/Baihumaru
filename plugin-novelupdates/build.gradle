@@ -1,0 +1,13 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':baihumaru-core')
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation("com.squareup.okhttp3:logging-interceptor:4.1.0")
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"

@@ -1,0 +1,3 @@
+include ':baihumaru-android'
+include ':baihumaru-core'
+include ':plugin-novelupdates'

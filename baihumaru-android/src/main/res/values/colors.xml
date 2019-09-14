@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorSurfaceDark">#121212
+    </color><!-- same as design_dark_default_color_surface from material design color res -->
+    <color name="colorSurface">#FFFFFF</color>
+</resources>
