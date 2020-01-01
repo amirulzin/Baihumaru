@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout
-        android:id="@+id/refreshLayout"
+    <moe.baihumaru.android.ui.defaults.DefaultRecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <moe.baihumaru.android.ui.defaults.DefaultRecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            tools:itemCount="4"
-            tools:listitem="@layout/library_item" />
-    </moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout>
-</layout>
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:itemCount="4"
+        tools:listitem="@layout/library_item" />
+</moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout>

@@ -2,18 +2,19 @@ package moe.baihumaru.android.ui.reader
 
 import android.os.Bundle
 import android.text.Spanned
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
 import commons.android.arch.*
-import commons.android.core.fragment.DataBindingFragment
 import commons.android.dagger.arch.DaggerViewModelFactory
 import commons.android.fromParcel
+import commons.android.viewbinding.ViewBindingFragment
 import commons.android.withParcel
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.ReaderFragmentBinding
 import moe.baihumaru.android.plugin.PluginManager
 import moe.baihumaru.android.ui.common.UIChapterId
@@ -22,7 +23,7 @@ import moe.baihumaru.core.ChapterBehavior
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-class ReaderFragment : DataBindingFragment<ReaderFragmentBinding>() {
+class ReaderFragment : ViewBindingFragment<ReaderFragmentBinding>() {
   companion object {
     const val TAG = "reader"
     const val KEY_CHAPTER = "chapter"
@@ -31,7 +32,6 @@ class ReaderFragment : DataBindingFragment<ReaderFragmentBinding>() {
       .withParcel(KEY_CHAPTER, chapter)
   }
 
-  override val layoutId = R.layout.reader_fragment
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -44,6 +44,10 @@ class ReaderFragment : DataBindingFragment<ReaderFragmentBinding>() {
 
   @Inject
   lateinit var vmf: DaggerViewModelFactory<ReaderViewModel>
+
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): ReaderFragmentBinding {
+    return ReaderFragmentBinding.inflate(inflater, container, false)
+  }
 }
 
 class ReaderConstruct(

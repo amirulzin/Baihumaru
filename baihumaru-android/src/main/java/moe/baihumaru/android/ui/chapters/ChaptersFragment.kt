@@ -1,20 +1,21 @@
 package moe.baihumaru.android.ui.chapters
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
-import commons.android.core.fragment.DataBindingFragment
 import commons.android.core.navigation.navIntoHistorically
-import commons.android.core.recycler.SingleTypedDataBindingListAdapter
-import commons.android.core.recycler.TypedDataBindingViewHolder
 import commons.android.dagger.arch.DaggerViewModelFactory
 import commons.android.fromParcel
+import commons.android.viewbinding.ViewBindingFragment
+import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
+import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import commons.android.withParcel
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.ChaptersFragmentBinding
 import moe.baihumaru.android.databinding.ChaptersItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
@@ -27,15 +28,13 @@ import moe.baihumaru.core.PageTraveler
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-class ChaptersFragment : DataBindingFragment<ChaptersFragmentBinding>(), SubNavRoot {
+class ChaptersFragment : ViewBindingFragment<ChaptersFragmentBinding>(), SubNavRoot {
   companion object {
     const val TAG = "chapters"
     const val KEY_NOVEL = "novel"
     @JvmStatic
     fun newInstance(novel: UINovel) = ChaptersFragment().withParcel(KEY_NOVEL, novel)
   }
-
-  override val layoutId = R.layout.chapters_fragment
 
   @Inject
   lateinit var vmf: DaggerViewModelFactory<ChaptersViewModel>
@@ -47,6 +46,10 @@ class ChaptersFragment : DataBindingFragment<ChaptersFragmentBinding>(), SubNavR
       binding = binding,
       vm = viewModelOf(vmf, ChaptersViewModel::class.java)
     ).init(savedInstanceState)
+  }
+
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): ChaptersFragmentBinding {
+    return ChaptersFragmentBinding.inflate(inflater, container, false)
   }
 }
 
@@ -75,21 +78,14 @@ class ChaptersConstruct(
   }
 
   override fun bindUpdates(data: UIChapters) {
-    with(binding.recyclerView.adapter as ChaptersAdapter) {
-      submitList(data.list)
-    }
+    (binding.recyclerView.adapter as? ChaptersAdapter)?.submitList(data.list)
   }
 }
 
 
 class ChaptersAdapter(
   private val itemDelegate: ItemDelegate
-) : SingleTypedDataBindingListAdapter<UIChapterId, ChaptersItemBinding>(DiffItemCallback()) {
-  override val layoutId = R.layout.chapters_item
-
-  override fun create(binding: ChaptersItemBinding): TypedDataBindingViewHolder<UIChapterId, ChaptersItemBinding> {
-    return Holder(binding, itemDelegate)
-  }
+) : SingleTypedViewBindingListAdapter<UIChapterId, ChaptersAdapter.Holder>(DiffItemCallback()) {
 
   private class DiffItemCallback : DiffUtil.ItemCallback<UIChapterId>() {
     override fun areItemsTheSame(oldItem: UIChapterId, newItem: UIChapterId) =
@@ -105,14 +101,18 @@ class ChaptersAdapter(
     fun onChapterClick(item: UIChapterId)
   }
 
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+    return Holder(ChaptersItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), itemDelegate)
+  }
+
   class Holder(
     override val binding: ChaptersItemBinding,
     private val delegate: ItemDelegate
-  ) : TypedDataBindingViewHolder<UIChapterId, ChaptersItemBinding>(binding) {
-    override fun bind(data: UIChapterId, position: Int) {
+  ) : TypedViewBindingViewHolder<UIChapterId, ChaptersItemBinding>(binding) {
+    override fun bind(item: UIChapterId, position: Int) {
       with(binding) {
-        title.text = data.chapterId.title
-        binding.cardRoot.setOnClickListener { delegate.onChapterClick(data) }
+        title.text = item.chapterId.title
+        binding.cardRoot.setOnClickListener { delegate.onChapterClick(item) }
       }
     }
   }

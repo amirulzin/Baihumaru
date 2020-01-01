@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "moe.baihumaru.android"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "0.1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -45,7 +45,12 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-    dataBinding {
+//    buildFeatures {
+//        compose = false
+//        buildConfig = true
+//        viewBinding = true
+//    }
+    viewBinding {
         enabled = true
     }
     testOptions {
@@ -67,29 +72,30 @@ dependencies {
     //Android baseline libs
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
+    implementation "androidx.core:core-ktx:1.1.0"
+    implementation 'com.google.android.material:material:1.2.0-alpha03'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.preference:preference:1.1.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
 
-    def lifecycle_version = "2.2.0-alpha04"
+    def lifecycle_version = "2.2.0-rc03"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
-    def room_version = "2.2.0-rc01"
+    def room_version = "2.2.3"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    def nav_version = "2.2.0-alpha02"
+    def nav_version = "2.2.0-rc04"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //DI
-    def dagger_version = "2.24"
+    def dagger_version = "2.25.3"
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
@@ -98,9 +104,9 @@ dependencies {
 
     //Network
     implementation 'org.jsoup:jsoup:1.12.1'
-    implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.moshi:moshi-kotlin:1.8.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.8.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.9.2'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.9.2'
 
     implementation "com.squareup.okhttp3:okhttp:4.1.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.1.0"
@@ -110,7 +116,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.6.1"
 
     //RXJava
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.11'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
 

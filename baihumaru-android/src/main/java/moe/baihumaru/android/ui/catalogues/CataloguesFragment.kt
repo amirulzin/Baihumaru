@@ -1,19 +1,20 @@
 package moe.baihumaru.android.ui.catalogues
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
-import commons.android.core.fragment.DataBindingFragment
 import commons.android.core.navigation.navIntoHistorically
-import commons.android.core.recycler.SingleTypedDataBindingListAdapter
-import commons.android.core.recycler.TypedDataBindingViewHolder
 import commons.android.dagger.arch.DaggerViewModelFactory
+import commons.android.viewbinding.ViewBindingFragment
+import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
+import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.CataloguesFragmentBinding
 import moe.baihumaru.android.databinding.CataloguesItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
@@ -22,7 +23,7 @@ import moe.baihumaru.android.ui.novels.NovelsFragment
 import moe.baihumaru.core.Plugin
 import javax.inject.Inject
 
-class CataloguesFragment : DataBindingFragment<CataloguesFragmentBinding>(), SubNavRoot {
+class CataloguesFragment : ViewBindingFragment<CataloguesFragmentBinding>(), SubNavRoot {
 
   companion object {
     const val TAG = "catalogues"
@@ -30,7 +31,6 @@ class CataloguesFragment : DataBindingFragment<CataloguesFragmentBinding>(), Sub
     fun newInstance() = CataloguesFragment()
   }
 
-  override val layoutId = R.layout.catalogues_fragment
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -43,6 +43,10 @@ class CataloguesFragment : DataBindingFragment<CataloguesFragmentBinding>(), Sub
 
   @Inject
   lateinit var vmf: DaggerViewModelFactory<CataloguesViewModel>
+
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): CataloguesFragmentBinding {
+    return CataloguesFragmentBinding.inflate(inflater, container, false)
+  }
 }
 
 data class UICatalogue(val id: String, val name: String) {
@@ -75,7 +79,7 @@ class CataloguesConstruct(
   }
 }
 
-class CataloguesAdapter(private val itemDelegate: ItemDelegate) : SingleTypedDataBindingListAdapter<UICatalogue, CataloguesItemBinding>(DiffCallback()) {
+class CataloguesAdapter(private val itemDelegate: ItemDelegate) : SingleTypedViewBindingListAdapter<UICatalogue, CataloguesAdapter.Holder>(DiffCallback()) {
   class DiffCallback : DiffUtil.ItemCallback<UICatalogue>() {
     override fun areItemsTheSame(oldItem: UICatalogue, newItem: UICatalogue): Boolean {
       return oldItem.id == newItem.id
@@ -86,21 +90,20 @@ class CataloguesAdapter(private val itemDelegate: ItemDelegate) : SingleTypedDat
     }
   }
 
-  override val layoutId = R.layout.catalogues_item
 
-  override fun create(binding: CataloguesItemBinding): TypedDataBindingViewHolder<UICatalogue, CataloguesItemBinding> {
-    return Holder(binding, itemDelegate)
-  }
-
-  class Holder(binding: CataloguesItemBinding, private val delegate: ItemDelegate) : TypedDataBindingViewHolder<UICatalogue, CataloguesItemBinding>(binding) {
-    override fun bind(data: UICatalogue, position: Int) {
-      binding.title.text = data.name
-      binding.root.setOnClickListener { delegate.onItemClick(data) }
+  class Holder(binding: CataloguesItemBinding, private val delegate: ItemDelegate) : TypedViewBindingViewHolder<UICatalogue, CataloguesItemBinding>(binding) {
+    override fun bind(item: UICatalogue, position: Int) {
+      binding.title.text = item.name
+      binding.root.setOnClickListener { delegate.onItemClick(item) }
     }
   }
 
   interface ItemDelegate {
     fun onItemClick(data: UICatalogue)
+  }
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+    return Holder(CataloguesItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), itemDelegate)
   }
 }
 

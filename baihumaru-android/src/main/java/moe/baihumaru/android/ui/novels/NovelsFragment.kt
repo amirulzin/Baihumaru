@@ -1,19 +1,20 @@
 package moe.baihumaru.android.ui.novels
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
-import commons.android.core.fragment.DataBindingFragment
 import commons.android.core.navigation.navIntoHistorically
-import commons.android.core.recycler.SingleTypedDataBindingListAdapter
-import commons.android.core.recycler.TypedDataBindingViewHolder
 import commons.android.dagger.arch.DaggerViewModelFactory
+import commons.android.viewbinding.ViewBindingFragment
+import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
+import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.NovelsFragmentBinding
 import moe.baihumaru.android.databinding.NovelsItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
@@ -25,7 +26,7 @@ import moe.baihumaru.core.PageTraveler
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-class NovelsFragment : DataBindingFragment<NovelsFragmentBinding>(), SubNavRoot {
+class NovelsFragment : ViewBindingFragment<NovelsFragmentBinding>(), SubNavRoot {
   companion object {
     const val TAG = "novels"
     const val KEY_PLUGIN_ID = "pluginId"
@@ -38,7 +39,7 @@ class NovelsFragment : DataBindingFragment<NovelsFragmentBinding>(), SubNavRoot 
     }
   }
 
-  override val layoutId = R.layout.novels_fragment
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     NovelsConstruct(
@@ -50,6 +51,10 @@ class NovelsFragment : DataBindingFragment<NovelsFragmentBinding>(), SubNavRoot 
 
   @Inject
   lateinit var vmf: DaggerViewModelFactory<NovelsViewModel>
+
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): NovelsFragmentBinding {
+    return NovelsFragmentBinding.inflate(inflater, container, false)
+  }
 }
 
 class NovelsConstruct(
@@ -83,13 +88,7 @@ class NovelsConstruct(
   }
 }
 
-class NovelsAdapter(private val itemDelegate: ItemDelegate) : SingleTypedDataBindingListAdapter<UINovel, NovelsItemBinding>(DiffCallback()) {
-  override val layoutId = R.layout.novels_item
-
-  override fun create(binding: NovelsItemBinding): TypedDataBindingViewHolder<UINovel, NovelsItemBinding> {
-    return Holder(binding, itemDelegate)
-  }
-
+class NovelsAdapter(private val itemDelegate: ItemDelegate) : SingleTypedViewBindingListAdapter<UINovel, NovelsAdapter.Holder>(DiffCallback()) {
   class DiffCallback : DiffUtil.ItemCallback<UINovel>() {
     override fun areItemsTheSame(oldItem: UINovel, newItem: UINovel): Boolean {
       return oldItem.pluginId == newItem.pluginId && oldItem.novelId == newItem.novelId
@@ -100,10 +99,14 @@ class NovelsAdapter(private val itemDelegate: ItemDelegate) : SingleTypedDataBin
     }
   }
 
-  class Holder(binding: NovelsItemBinding, private val delegate: ItemDelegate) : TypedDataBindingViewHolder<UINovel, NovelsItemBinding>(binding) {
-    override fun bind(data: UINovel, position: Int) {
-      binding.title.text = data.novelId.title
-      binding.root.setOnClickListener { delegate.onItemClick(data) }
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+    return Holder(NovelsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), itemDelegate)
+  }
+
+  class Holder(binding: NovelsItemBinding, private val delegate: ItemDelegate) : TypedViewBindingViewHolder<UINovel, NovelsItemBinding>(binding) {
+    override fun bind(item: UINovel, position: Int) {
+      binding.title.text = item.novelId.title
+      binding.root.setOnClickListener { delegate.onItemClick(item) }
     }
   }
 

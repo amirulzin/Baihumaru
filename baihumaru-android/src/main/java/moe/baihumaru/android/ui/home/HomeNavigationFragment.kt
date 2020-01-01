@@ -1,15 +1,16 @@
 package moe.baihumaru.android.ui.home
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import commons.android.core.fragment.DataBindingFragmentCompat
 import commons.android.core.navigation.navInto
-import moe.baihumaru.android.R
+import commons.android.viewbinding.ViewBindingFragment
 import moe.baihumaru.android.databinding.HomeNavFragmentBinding
 import moe.baihumaru.android.navigation.PrimaryNavRoot
 
-abstract class HomeNavigationFragment<F : Fragment> : DataBindingFragmentCompat<HomeNavFragmentBinding>(), PrimaryNavRoot {
+abstract class HomeNavigationFragment<F : Fragment> : ViewBindingFragment<HomeNavFragmentBinding>(), PrimaryNavRoot {
   companion object {
     const val DYNAMIC_TAG = "dynamic_tag"
   }
@@ -22,9 +23,12 @@ abstract class HomeNavigationFragment<F : Fragment> : DataBindingFragmentCompat<
     }
   }
 
-  fun fragmentTag(): String = arguments!!.getString(DYNAMIC_TAG)!!
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): HomeNavFragmentBinding {
+    return HomeNavFragmentBinding.inflate(inflater, container, false)
+  }
 
-  override val layoutId = R.layout.home_nav_fragment
+  fun fragmentTag(): String = arguments?.getString(DYNAMIC_TAG)
+    ?: throw IllegalStateException("${javaClass.simpleName} argument $DYNAMIC_TAG is null")
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

@@ -1,20 +1,21 @@
 package moe.baihumaru.android.ui.library
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.squareup.moshi.JsonClass
 import commons.android.arch.*
-import commons.android.core.fragment.DataBindingFragment
 import commons.android.core.navigation.navIntoHistorically
-import commons.android.core.recycler.SingleTypedDataBindingListAdapter
-import commons.android.core.recycler.TypedDataBindingViewHolder
 import commons.android.core.visibility.autoHideOnNull
 import commons.android.dagger.arch.DaggerViewModelFactory
+import commons.android.viewbinding.ViewBindingFragment
+import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
+import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.LibraryFragmentBinding
 import moe.baihumaru.android.databinding.LibraryItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
@@ -27,14 +28,12 @@ import moe.baihumaru.core.DefaultChapterId
 import moe.baihumaru.core.DefaultNovelId
 import javax.inject.Inject
 
-class LibraryFragment : DataBindingFragment<LibraryFragmentBinding>(), SubNavRoot {
+class LibraryFragment : ViewBindingFragment<LibraryFragmentBinding>(), SubNavRoot {
   companion object {
     const val TAG = "library"
     @JvmStatic
     fun newInstance() = LibraryFragment()
   }
-
-  override val layoutId = R.layout.library_fragment
 
   @Inject
   lateinit var vmf: DaggerViewModelFactory<LibraryViewModel>
@@ -46,6 +45,10 @@ class LibraryFragment : DataBindingFragment<LibraryFragmentBinding>(), SubNavRoo
       binding = binding,
       vm = viewModelOf(vmf, LibraryViewModel::class.java)
     ).init(savedInstanceState)
+  }
+
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): LibraryFragmentBinding {
+    return LibraryFragmentBinding.inflate(inflater, container, false)
   }
 }
 
@@ -96,12 +99,8 @@ class LibraryConstruct(
 
 class LibraryAdapter(
   private val itemDelegate: ItemDelegate
-) : SingleTypedDataBindingListAdapter<UILibraryItem, LibraryItemBinding>(DiffItemCallback()) {
-  override val layoutId = R.layout.library_item
+) : SingleTypedViewBindingListAdapter<UILibraryItem, LibraryAdapter.Holder>(DiffItemCallback()) {
 
-  override fun create(binding: LibraryItemBinding): TypedDataBindingViewHolder<UILibraryItem, LibraryItemBinding> {
-    return Holder(binding, itemDelegate)
-  }
 
   private class DiffItemCallback : DiffUtil.ItemCallback<UILibraryItem>() {
     override fun areItemsTheSame(oldItem: UILibraryItem, newItem: UILibraryItem) =
@@ -117,22 +116,26 @@ class LibraryAdapter(
     fun onNovelClick(item: UILibraryItem)
   }
 
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+    return Holder(LibraryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), itemDelegate)
+  }
+
   class Holder(
     override val binding: LibraryItemBinding,
     private val delegate: ItemDelegate
-  ) : TypedDataBindingViewHolder<UILibraryItem, LibraryItemBinding>(binding) {
-    override fun bind(data: UILibraryItem, position: Int) {
+  ) : TypedViewBindingViewHolder<UILibraryItem, LibraryItemBinding>(binding) {
+    override fun bind(item: UILibraryItem, position: Int) {
       with(binding) {
-        title.text = data.novelId.title
-        primary.autoHideOnNull(data.current) { current ->
+        title.text = item.novelId.title
+        primary.autoHideOnNull(item.current) { current ->
           primary.text = current.title
-          primary.setOnClickListener { delegate.onCurrentClick(data) }
+          primary.setOnClickListener { delegate.onCurrentClick(item) }
         }
-        secondary.autoHideOnNull(data.latest) { latest ->
+        secondary.autoHideOnNull(item.latest) { latest ->
           secondary.text = latest.title
-          secondary.setOnClickListener { delegate.onLatestClick(data) }
+          secondary.setOnClickListener { delegate.onLatestClick(item) }
         }
-        binding.cardRoot.setOnClickListener { delegate.onNovelClick(data) }
+        binding.cardRoot.setOnClickListener { delegate.onNovelClick(item) }
       }
     }
   }

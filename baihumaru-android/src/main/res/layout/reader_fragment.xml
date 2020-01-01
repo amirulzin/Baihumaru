@@ -1,96 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout
-        android:id="@+id/refreshLayout"
-        android:layout_width="match_parent"
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="wrap_content"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="8dp"
+                app:cardBackgroundColor="?attr/colorPrimarySurface"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
 
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="?attr/colorPrimarySurface"
-                    app:cardCornerRadius="8dp"
-                    app:cardElevation="4dp">
+                    android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <ImageButton
+                        android:id="@+id/previous"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_navigate_before_24px"
+                        android:tint="?attr/colorSurface" />
 
-                        <ImageButton
-                            android:id="@+id/previous"
-                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                            android:layout_width="56dp"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_round_navigate_before_24px"
-                            android:tint="?attr/colorSurface" />
+                    <ImageButton
+                        android:id="@+id/appearance"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_round_palette_24px"
+                        android:tint="?attr/colorSurface" />
 
-                        <ImageButton
-                            android:id="@+id/appearance"
-                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_round_palette_24px"
-                            android:tint="?attr/colorSurface" />
-
-                        <ImageButton
-                            android:id="@+id/plugin"
-                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_round_extension_24px"
-                            android:tint="?attr/colorOnPrimary" />
+                    <ImageButton
+                        android:id="@+id/plugin"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_round_extension_24px"
+                        android:tint="?attr/colorOnPrimary" />
 
 
-                        <ImageButton
-                            android:id="@+id/offline"
-                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:tint="?attr/colorSurface"
-                            tools:src="@drawable/ic_round_public_24px" />
+                    <ImageButton
+                        android:id="@+id/offline"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:tint="?attr/colorSurface"
+                        tools:src="@drawable/ic_round_public_24px" />
 
-                        <ImageButton
-                            android:id="@+id/online"
-                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:src="@drawable/ic_round_open_browser_24px"
-                            android:tint="?attr/colorOnPrimary" />
+                    <ImageButton
+                        android:id="@+id/online"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/ic_round_open_browser_24px"
+                        android:tint="?attr/colorOnPrimary" />
 
-                        <ImageButton
-                            android:id="@+id/next"
-                            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                            android:layout_width="56dp"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_round_navigate_next_24px"
-                            android:tint="?attr/colorSurface" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    <ImageButton
+                        android:id="@+id/next"
+                        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                        android:layout_width="56dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_round_navigate_next_24px"
+                        android:tint="?attr/colorSurface" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    tools:text="@tools:sample/lorem/random" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout>
-</layout>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                tools:text="@tools:sample/lorem/random" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</moe.baihumaru.android.ui.defaults.DefaultSwipeRefreshLayout>

@@ -1,19 +1,20 @@
 package moe.baihumaru.android.ui.plugins
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
-import commons.android.core.fragment.DataBindingFragment
-import commons.android.core.recycler.SingleTypedDataBindingListAdapter
-import commons.android.core.recycler.TypedDataBindingViewHolder
 import commons.android.dagger.arch.DaggerViewModelFactory
+import commons.android.viewbinding.ViewBindingFragment
+import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
+import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.PluginsFragmentBinding
 import moe.baihumaru.android.databinding.PluginsItemBinding
 import moe.baihumaru.android.plugin.PluginManager
@@ -21,14 +22,13 @@ import moe.baihumaru.android.ui.defaults.bindRefresh
 import moe.baihumaru.core.Plugin
 import javax.inject.Inject
 
-class PluginsFragment : DataBindingFragment<PluginsFragmentBinding>() {
+class PluginsFragment : ViewBindingFragment<PluginsFragmentBinding>() {
   companion object {
     const val TAG = "plugins"
     @JvmStatic
     fun newInstance() = PluginsFragment()
   }
 
-  override val layoutId = R.layout.plugins_fragment
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     PluginConstruct(
@@ -40,6 +40,10 @@ class PluginsFragment : DataBindingFragment<PluginsFragmentBinding>() {
 
   @Inject
   lateinit var vmf: DaggerViewModelFactory<PluginsViewModel>
+
+  override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): PluginsFragmentBinding {
+    return PluginsFragmentBinding.inflate(inflater, container, false)
+  }
 
 }
 
@@ -65,12 +69,7 @@ class PluginConstruct(
 }
 
 
-class PluginAdapter : SingleTypedDataBindingListAdapter<UIPlugin, PluginsItemBinding>(DiffCallback()) {
-  override val layoutId = R.layout.plugins_item
-
-  override fun create(binding: PluginsItemBinding): TypedDataBindingViewHolder<UIPlugin, PluginsItemBinding> {
-    return Holder(binding)
-  }
+class PluginAdapter : SingleTypedViewBindingListAdapter<UIPlugin, PluginAdapter.Holder>(DiffCallback()) {
 
   private class DiffCallback : DiffUtil.ItemCallback<UIPlugin>() {
     override fun areItemsTheSame(oldItem: UIPlugin, newItem: UIPlugin): Boolean {
@@ -82,9 +81,13 @@ class PluginAdapter : SingleTypedDataBindingListAdapter<UIPlugin, PluginsItemBin
     }
   }
 
-  private class Holder(binding: PluginsItemBinding) : TypedDataBindingViewHolder<UIPlugin, PluginsItemBinding>(binding) {
-    override fun bind(data: UIPlugin, position: Int) {
-      binding.title.text = data.displayName
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+    return Holder(PluginsItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+  }
+
+  class Holder(binding: PluginsItemBinding) : TypedViewBindingViewHolder<UIPlugin, PluginsItemBinding>(binding) {
+    override fun bind(item: UIPlugin, position: Int) {
+      binding.title.text = item.displayName
     }
   }
 }

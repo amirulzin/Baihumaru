@@ -1,11 +1,11 @@
 package moe.baihumaru.android.ui.home
 
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import commons.android.arch.RxViewModel
 import commons.android.arch.UIConstruct
 import commons.android.arch.observeNonNull
@@ -34,7 +34,8 @@ class HomeActivity : DaggerAppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     StatusBarUtil.toggleStatusBar(this, true, R.color.colorTransparent)
-    binding = DataBindingUtil.setContentView(this, R.layout.home_activity)
+    binding = HomeActivityBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     HomeConstruct(
       activity = this,
       vm = viewModelOf(vmf, HomeViewModel::class.java),
@@ -76,9 +77,9 @@ class HomeConstruct(
   private val vm: HomeViewModel,
   private val binding: HomeActivityBinding
 ) : UIConstruct<UIHome> {
+  @SuppressLint("RestrictedApi")
   override fun init(savedInstanceState: Bundle?) {
     vm.homeLive.observeNonNull(activity, ::bindUpdates)
-
     if (savedInstanceState == null) {
       binding.root.post {
         binding.bottomNav.selectedItemId = R.id.nav_library
