@@ -12,7 +12,6 @@ import moe.baihumaru.android.ui.UIModule
   AndroidInjectionModule::class,
   BaihumaruModule::class,
   NetworkModule::class,
-  PluginModule::class,
   UIModule::class,
   PrefsModule::class
 ])
