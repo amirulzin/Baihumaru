@@ -25,6 +25,11 @@ open class RxResourceLiveData<T : Any>(
     resourceState.postValue(ResourceState(State.READY))
   }
 
+  fun postError(throwable: Throwable) {
+    val out = ResourceState(State.ERROR, throwable.message ?: "Unknown error", ResourceType.ANY)
+    resourceState.postValue(out)
+  }
+
   fun postError(message: String = "", type: ResourceType = ResourceType.ANY) {
     resourceState.postValue(ResourceState(State.ERROR, message, type))
   }

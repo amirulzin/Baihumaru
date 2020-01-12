@@ -4,9 +4,9 @@ import androidx.lifecycle.Observer
 
 interface NonNullObserver<T : Any> : Observer<T?> {
 
-  override fun onChanged(t: T?) {
-    t?.let(::onValueChanged)
+  override fun onChanged(data: T?) {
+    data?.let(::onValueChanged)
   }
 
-  fun onValueChanged(t: T)
+  fun onValueChanged(data: T)
 }
