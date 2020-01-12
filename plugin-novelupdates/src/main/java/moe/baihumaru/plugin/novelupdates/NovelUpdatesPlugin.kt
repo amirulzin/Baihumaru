@@ -69,12 +69,18 @@ abstract class NovelUpdatesPlugin : Plugin {
   }
 
   private fun toDocument(response: Response, url: String, isBodyFragment: Boolean = false): Document {
-    val document = if (isBodyFragment) {
-      response.body?.string()?.let { Jsoup.parseBodyFragment(it, url) }
-    } else {
-      response.body?.byteStream()?.use { Jsoup.parse(it, "UTF-8", url) }
+    if (response.isSuccessful) {
+      val document = if (isBodyFragment) {
+        response.body?.string()?.let { Jsoup.parseBodyFragment(it, url) }
+      } else {
+        response.body?.byteStream()?.use { Jsoup.parse(it, "UTF-8", url) }
+      }
+      return document ?: throw IOException("$url Body is empty")
+    } else throw when (response.code) {
+      403 -> PluginError.SiteGuardException()
+      404 -> PluginError.ServerUnreachableException()
+      else -> IOException(response.message)
     }
-    return document ?: throw IOException("$url Body is empty")
   }
 
   private fun parseNovels(document: Document): List<DefaultNovelId> {
