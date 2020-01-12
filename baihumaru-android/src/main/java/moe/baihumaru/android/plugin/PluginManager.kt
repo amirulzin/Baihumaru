@@ -2,13 +2,16 @@ package moe.baihumaru.android.plugin
 
 import androidx.annotation.WorkerThread
 import commons.android.arch.offline.refresh.RefreshDelegate
+import commons.android.dagger.ApplicationScope
 import moe.baihumaru.core.Plugin
 import moe.baihumaru.plugin.wuxiaworld.WuxiaWorldPlugin
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @WorkerThread
-class PluginManager(private val pluginLoader: PluginLoader, private val client: OkHttpClient) {
+@ApplicationScope
+class PluginManager @Inject constructor(private val pluginLoader: PluginLoader, private val client: OkHttpClient) {
 
   private val plugins = mutableMapOf<String, Plugin>()
 
