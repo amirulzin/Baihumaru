@@ -24,15 +24,16 @@ class WuxiaWorldPluginTest {
 
   @Test
   fun loadChapters() {
-    plugin.provideChapters(plugin.provideNovels().random()).apply {
+    val novelId = plugin.provideNovels().last()
+    plugin.provideChapters(novelId).apply {
       require(isNotEmpty())
     }
   }
 
   @Test
   fun loadChapter() {
-    val novelId = plugin.provideNovels().random()
-    val chapterId = plugin.provideChapters(novelId).random()
+    val novelId = plugin.provideNovels().last()
+    val chapterId = plugin.provideChapters(novelId).last()
     plugin.provideChapter(novelId, chapterId)
   }
 }

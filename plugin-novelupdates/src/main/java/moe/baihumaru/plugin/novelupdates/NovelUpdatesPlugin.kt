@@ -11,7 +11,9 @@ abstract class NovelUpdatesPlugin : Plugin {
   private lateinit var client: OkHttpClient
 
   override fun injectOkHttpClient(client: OkHttpClient) {
-    this.client = client
+    this.client = client.newBuilder()
+      .addInterceptor(AgentInterceptor())
+      .build()
   }
 
   abstract val groupNameId: String
