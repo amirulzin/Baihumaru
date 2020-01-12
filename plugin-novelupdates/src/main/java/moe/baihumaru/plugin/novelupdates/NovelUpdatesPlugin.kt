@@ -25,7 +25,7 @@ abstract class NovelUpdatesPlugin : Plugin {
   abstract fun parseChapterBehavior(document: Document, chapterUrl: HttpUrl, parsedChapter: Chapter): ChapterBehavior
 
   override fun provideChapter(novelId: DefaultNovelId, chapterId: DefaultChapterId): Pair<Chapter, ChapterBehavior> {
-    val (document, url) = getAsDocumentWithUrl(retrieveChapterUrlBy(chapterId))
+    val (document, url) = getAsDocumentWithUrl(provideChapterUrl(novelId, chapterId))
     if (canHandle(url)) {
       with(parseChapter(document, url)) {
         return this to parseChapterBehavior(document, url, this)
@@ -117,7 +117,7 @@ abstract class NovelUpdatesPlugin : Plugin {
     return headerValue.substringAfter("?p=").substringBefore(">").trim()
   }
 
-  private fun retrieveChapterUrlBy(chapterId: DefaultChapterId): String {
+  override fun provideChapterUrl(novelId: DefaultNovelId, chapterId: DefaultChapterId): String {
     return "https://www.novelupdates.com/extnu/${chapterId.id}/"
   }
 }

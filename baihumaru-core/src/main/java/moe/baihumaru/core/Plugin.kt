@@ -19,4 +19,6 @@ interface Plugin {
   fun provideChapters(novelId: DefaultNovelId, pageTraveler: PageTraveler = PageTraveler()): List<DefaultChapterId> = emptyList()
 
   fun provideChapter(novelId: DefaultNovelId, chapterId: DefaultChapterId): Pair<Chapter, ChapterBehavior>
+
+  fun provideChapterUrl(novelId: DefaultNovelId, chapterId: DefaultChapterId): String
 }
