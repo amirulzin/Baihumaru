@@ -1,5 +1,6 @@
 package commons.android
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
@@ -10,6 +11,10 @@ fun <T, F : Fragment> F.withParcel(key: String, parcel: T): F = apply {
   arguments = (arguments ?: Bundle()).apply {
     putParcelable(key, Parcels.wrap(parcel))
   }
+}
+
+fun <T> Intent.withParcel(key: String, parcel: T) = apply {
+  putExtra(key, Parcels.wrap(parcel))
 }
 
 fun <T, F : Fragment> F.fromParcel(key: String): T {
