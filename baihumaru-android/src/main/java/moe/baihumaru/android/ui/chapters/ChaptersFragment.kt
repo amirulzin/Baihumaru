@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
 import commons.android.arch.annotations.ViewLayer
+import commons.android.core.navigation.navIntoHistorically
 import commons.android.dagger.arch.DaggerViewModelFactory
 import commons.android.fromParcel
 import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
@@ -24,7 +25,7 @@ import moe.baihumaru.android.ui.common.UIChapterId
 import moe.baihumaru.android.ui.common.UINovel
 import moe.baihumaru.android.ui.defaults.CoreNestedFragment
 import moe.baihumaru.android.ui.defaults.bindRefresh
-import moe.baihumaru.android.ui.reader.ReaderActivity
+import moe.baihumaru.android.ui.webview.WebViewFragment
 import moe.baihumaru.core.PageTraveler
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
@@ -67,7 +68,10 @@ class ChaptersConstruct(
     override fun onChapterClick(item: UIChapterId) {
 //      origin.navIntoHistorically(ReaderFragment.TAG) { ReaderFragment.newInstance(item) }
       origin.activity?.let {
-        origin.startActivity(ReaderActivity.intentFactory(it, item))
+        //origin.startActivity(ReaderActivity.intentFactory(it, item))
+        item.url?.let { url ->
+          origin.navIntoHistorically(WebViewFragment.TAG) { WebViewFragment.intentFactory(url) }
+        }
       }
     }
   }
@@ -148,9 +152,15 @@ class ChaptersLive @Inject constructor(
     Single.fromCallable {
       val pluginId = novel.get().pluginId
       val novelId = novel.get().novelId
-      pluginManager.retrieve(pluginId)
-        .provideChapters(novelId, traveler.get())
-        .map { chapterId -> UIChapterId(UINovel(pluginId, novelId), chapterId) }
+      val plugin = pluginManager.retrieve(pluginId)
+
+      plugin.provideChapters(novelId, traveler.get())
+        .map { chapterId ->
+          UIChapterId(
+            novel = UINovel(pluginId, novelId),
+            chapterId = chapterId,
+            url = plugin.provideChapterUrl(novelId, chapterId))
+        }
     }.map(::UIChapters)
       .subscribeOn(Schedulers.io())
       .subscribe(::postValue, errorHandler::accept)

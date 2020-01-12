@@ -9,6 +9,7 @@ import moe.baihumaru.android.ui.library.LibraryFragment
 import moe.baihumaru.android.ui.novels.NovelsFragment
 import moe.baihumaru.android.ui.plugins.PluginsFragment
 import moe.baihumaru.android.ui.reader.ReaderFragment
+import moe.baihumaru.android.ui.webview.WebViewFragment
 
 @Module
 interface FragmentModule {
@@ -36,4 +37,7 @@ interface FragmentModule {
   @FragmentScope
   fun reader(): ReaderFragment
 
+  @ContributesAndroidInjector
+  @FragmentScope
+  fun webView(): WebViewFragment
 }

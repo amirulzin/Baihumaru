@@ -12,7 +12,8 @@ import org.parceler.ParcelPropertyConverter
 data class UIChapterId @ParcelConstructor constructor(
   val novel: UINovel,
   @ParcelPropertyConverter(Converter::class)
-  val chapterId: DefaultChapterId
+  val chapterId: DefaultChapterId,
+  val url: String? = null
 ) {
   class Converter : ParcelConverter<DefaultChapterId> {
     override fun fromParcel(parcel: AndroidParcel?): DefaultChapterId {
