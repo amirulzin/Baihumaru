@@ -14,8 +14,8 @@ inline fun FragmentManager.navInto(@IdRes containerId: Int, fragmentTag: String,
 inline fun FragmentManager.navIntoHistorically(@IdRes containerId: Int, fragmentTag: String, backStackTag: String? = null, crossinline fragmentFactory: (() -> Fragment)) {
   val outFrag = findFragmentByTag(fragmentTag) ?: fragmentFactory.invoke()
   beginTransaction()
-    .addToBackStack(backStackTag)
     .replace(containerId, outFrag, fragmentTag)
+    .addToBackStack(backStackTag)
     .commit()
 }
 
@@ -25,9 +25,9 @@ interface NavigationRoot {
 }
 
 inline fun NavigationRoot.navIntoHistorically(fragmentTag: String, backStackTag: String? = null, crossinline fragmentFactory: (() -> Fragment)) {
-  (this as Fragment).fragmentManager?.navIntoHistorically(contentId(), fragmentTag, backStackTag, fragmentFactory)
+  (this as Fragment).parentFragmentManager.navIntoHistorically(contentId(), fragmentTag, backStackTag, fragmentFactory)
 }
 
 inline fun NavigationRoot.navInto(fragmentTag: String, crossinline fragmentFactory: (() -> Fragment)) {
-  (this as Fragment).fragmentManager?.navInto(contentId(), fragmentTag, fragmentFactory)
+  (this as Fragment).parentFragmentManager.navInto(contentId(), fragmentTag, fragmentFactory)
 }
