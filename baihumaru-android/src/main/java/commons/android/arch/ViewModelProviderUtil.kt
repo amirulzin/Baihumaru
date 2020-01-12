@@ -1,7 +1,6 @@
 package commons.android.arch
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -10,12 +9,9 @@ import javax.inject.Inject
  * ViewModelProvider extensions for support library Fragment and FragmentActivity
  */
 
-fun <T : ViewModel> ViewModelStoreOwner.viewModelOf(factory: ViewModelProvider.Factory, clazz: Class<T>) =
-  ViewModelProvider(this, factory).get(clazz)
-
-fun <T : ViewModel> Fragment.activityViewModelOf(factory: ViewModelProvider.Factory, clazz: Class<T>) =
-  activity?.let { ViewModelProvider(it, factory).get(clazz) }
-    ?: throw IllegalStateException("${clazz.canonicalName} is created outside of activity")
+fun <T : ViewModel> ViewModelStoreOwner.viewModelOf(clazz: Class<T>, factory: ViewModelProvider.Factory? = null) =
+  if (factory == null) ViewModelProvider(this).get(clazz)
+  else ViewModelProvider(this, factory).get(clazz)
 
 class MultiActivityViewModelStore @Inject constructor() : ViewModelStore() {
   val trackedRef = AtomicInteger(0)
