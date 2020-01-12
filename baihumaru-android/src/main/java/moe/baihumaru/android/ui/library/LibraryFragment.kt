@@ -7,28 +7,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.squareup.moshi.JsonClass
 import commons.android.arch.*
+import commons.android.arch.annotations.ViewLayer
 import commons.android.core.navigation.navIntoHistorically
 import commons.android.core.visibility.autoHideOnNull
 import commons.android.dagger.arch.DaggerViewModelFactory
-import commons.android.viewbinding.ViewBindingFragment
 import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
 import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.LibraryFragmentBinding
 import moe.baihumaru.android.databinding.LibraryItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
 import moe.baihumaru.android.ui.chapters.ChaptersFragment
 import moe.baihumaru.android.ui.common.UIChapterId
 import moe.baihumaru.android.ui.common.UINovel
+import moe.baihumaru.android.ui.defaults.CoreNestedFragment
 import moe.baihumaru.android.ui.defaults.bindRefresh
-import moe.baihumaru.android.ui.reader.ReaderFragment
+import moe.baihumaru.android.ui.reader.ReaderActivity
 import moe.baihumaru.core.DefaultChapterId
 import moe.baihumaru.core.DefaultNovelId
 import javax.inject.Inject
 
-class LibraryFragment : ViewBindingFragment<LibraryFragmentBinding>(), SubNavRoot {
+class LibraryFragment : CoreNestedFragment<LibraryFragmentBinding>(), SubNavRoot {
   companion object {
     const val TAG = "library"
     @JvmStatic
@@ -43,15 +45,18 @@ class LibraryFragment : ViewBindingFragment<LibraryFragmentBinding>(), SubNavRoo
     LibraryConstruct(
       origin = this,
       binding = binding,
-      vm = viewModelOf(vmf, LibraryViewModel::class.java)
+      vm = viewModelOf(LibraryViewModel::class.java, vmf)
     ).init(savedInstanceState)
   }
 
   override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): LibraryFragmentBinding {
     return LibraryFragmentBinding.inflate(inflater, container, false)
   }
+
+  override fun contextualTitle() = getString(R.string.nav_library)
 }
 
+@ViewLayer
 class LibraryConstruct(
   private val origin: LibraryFragment,
   private val vm: LibraryViewModel,
@@ -88,7 +93,10 @@ class LibraryConstruct(
 
   private fun navToChapter(chapter: UIChapterId?) {
     if (chapter != null) {
-      origin.navIntoHistorically(ReaderFragment.TAG) { ReaderFragment.newInstance(chapter) }
+      origin.activity?.let {
+        origin.startActivity(ReaderActivity.intentFactory(it, chapter))
+      }
+//      origin.navIntoHistorically(ReaderFragment.TAG) { ReaderFragment.newInstance(chapter) }
     }
   }
 
@@ -141,7 +149,7 @@ class LibraryAdapter(
   }
 }
 
-class LibraryViewModel @Inject constructor(val libraryLive: LibraryLive) : RxViewModel(libraryLive.disposables)
+class LibraryViewModel @Inject constructor(val libraryLive: LibraryLive) : RxMultiViewModel(libraryLive.disposables)
 
 class LibraryLive @Inject constructor(
   private val libraryPref: LibraryPref,

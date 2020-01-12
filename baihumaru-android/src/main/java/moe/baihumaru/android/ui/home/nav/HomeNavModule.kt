@@ -1,20 +1,20 @@
-package moe.baihumaru.android.ui.home
+package moe.baihumaru.android.ui.home.nav
 
 import commons.android.dagger.FragmentScope
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
-interface HomeConstructModule {
+interface HomeNavModule {
   @ContributesAndroidInjector
   @FragmentScope
-  fun libraryContainer(): HomeConstruct.NavLibraryFragment
+  fun libraryContainer(): NavLibraryFragment
 
   @ContributesAndroidInjector
   @FragmentScope
-  fun cataloguesContainer(): HomeConstruct.NavCataloguesFragment
+  fun cataloguesContainer(): NavCataloguesFragment
 
   @ContributesAndroidInjector
   @FragmentScope
-  fun pluginsContainer(): HomeConstruct.NavPluginFragment
+  fun pluginsContainer(): NavPluginFragment
 }

@@ -7,26 +7,27 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
+import commons.android.arch.annotations.ViewLayer
 import commons.android.core.navigation.navIntoHistorically
 import commons.android.dagger.arch.DaggerViewModelFactory
-import commons.android.viewbinding.ViewBindingFragment
 import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
 import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.CataloguesFragmentBinding
 import moe.baihumaru.android.databinding.CataloguesItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
 import moe.baihumaru.android.plugin.PluginManager
+import moe.baihumaru.android.ui.defaults.CoreNestedFragment
 import moe.baihumaru.android.ui.novels.NovelsFragment
 import moe.baihumaru.core.Plugin
 import javax.inject.Inject
 
-class CataloguesFragment : ViewBindingFragment<CataloguesFragmentBinding>(), SubNavRoot {
+class CataloguesFragment : CoreNestedFragment<CataloguesFragmentBinding>(), SubNavRoot {
 
   companion object {
-    const val TAG = "catalogues"
     @JvmStatic
     fun newInstance() = CataloguesFragment()
   }
@@ -47,6 +48,8 @@ class CataloguesFragment : ViewBindingFragment<CataloguesFragmentBinding>(), Sub
   override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): CataloguesFragmentBinding {
     return CataloguesFragmentBinding.inflate(inflater, container, false)
   }
+
+  override fun contextualTitle() = getString(R.string.nav_catalogues)
 }
 
 data class UICatalogue(val id: String, val name: String) {
@@ -55,6 +58,7 @@ data class UICatalogue(val id: String, val name: String) {
 
 data class UICatalogues(val list: List<UICatalogue>)
 
+@ViewLayer
 class CataloguesConstruct(
   private val origin: CataloguesFragment,
   private val binding: CataloguesFragmentBinding,
@@ -62,7 +66,7 @@ class CataloguesConstruct(
 ) : UIConstruct<UICatalogues> {
   private val itemDelegate = object : CataloguesAdapter.ItemDelegate {
     override fun onItemClick(data: UICatalogue) {
-      origin.navIntoHistorically(NovelsFragment.TAG) { NovelsFragment.newInstance(data.id) }
+      origin.navIntoHistorically(NovelsFragment.TAG) { NovelsFragment.newInstance(data.id, data.name) }
     }
   }
 
@@ -107,7 +111,7 @@ class CataloguesAdapter(private val itemDelegate: ItemDelegate) : SingleTypedVie
   }
 }
 
-class CataloguesViewModel @Inject constructor(val cataloguesLive: CataloguesLive) : RxViewModel(cataloguesLive.disposables)
+class CataloguesViewModel @Inject constructor(val cataloguesLive: CataloguesLive) : RxMultiViewModel(cataloguesLive.disposables)
 
 class CataloguesLive @Inject constructor(private val pluginManager: PluginManager, errorHandler: RetrofitRxErrorHandler) : AutoRefreshLiveData<UICatalogues>(errorHandler) {
   override fun refresh() {

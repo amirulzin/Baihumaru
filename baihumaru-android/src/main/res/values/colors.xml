@@ -4,7 +4,11 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorTransparent">#00000000</color>
-    <color name="colorSurfaceDark">#121212
-    </color><!-- same as design_dark_default_color_surface from material design color res -->
+    <!-- same as design_dark_default_color_surface from material design color res -->
+    <color name="colorSurfaceDark">#121212</color>
+    <color name="colorSurfaceDarkest">#060606</color>
     <color name="colorSurface">#FFFFFF</color>
+    <color name="colorNavBar">#282828</color>
+    <color name="colorNavBarSecondary">@color/colorSurfaceDark</color>
+    <color name="shadowStart">#26000000</color>
 </resources>

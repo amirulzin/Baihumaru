@@ -6,29 +6,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import commons.android.arch.*
-import commons.android.core.navigation.navIntoHistorically
+import commons.android.arch.annotations.ViewLayer
 import commons.android.dagger.arch.DaggerViewModelFactory
 import commons.android.fromParcel
-import commons.android.viewbinding.ViewBindingFragment
 import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
 import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import commons.android.withParcel
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
+import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.ChaptersFragmentBinding
 import moe.baihumaru.android.databinding.ChaptersItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
 import moe.baihumaru.android.plugin.PluginManager
 import moe.baihumaru.android.ui.common.UIChapterId
 import moe.baihumaru.android.ui.common.UINovel
+import moe.baihumaru.android.ui.defaults.CoreNestedFragment
 import moe.baihumaru.android.ui.defaults.bindRefresh
-import moe.baihumaru.android.ui.reader.ReaderFragment
+import moe.baihumaru.android.ui.reader.ReaderActivity
 import moe.baihumaru.core.PageTraveler
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-class ChaptersFragment : ViewBindingFragment<ChaptersFragmentBinding>(), SubNavRoot {
+class ChaptersFragment : CoreNestedFragment<ChaptersFragmentBinding>(), SubNavRoot {
   companion object {
     const val TAG = "chapters"
     const val KEY_NOVEL = "novel"
@@ -44,15 +45,19 @@ class ChaptersFragment : ViewBindingFragment<ChaptersFragmentBinding>(), SubNavR
     ChaptersConstruct(
       origin = this,
       binding = binding,
-      vm = viewModelOf(vmf, ChaptersViewModel::class.java)
+      vm = viewModelOf(ChaptersViewModel::class.java, vmf)
     ).init(savedInstanceState)
   }
 
   override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup): ChaptersFragmentBinding {
     return ChaptersFragmentBinding.inflate(inflater, container, false)
   }
+
+  override fun contextualTitle() = getString(R.string.nav_chapters)
+
 }
 
+@ViewLayer
 class ChaptersConstruct(
   private val origin: ChaptersFragment,
   private val vm: ChaptersViewModel,
@@ -60,7 +65,10 @@ class ChaptersConstruct(
 ) : UIConstruct<UIChapters> {
   private val itemDelegate = object : ChaptersAdapter.ItemDelegate {
     override fun onChapterClick(item: UIChapterId) {
-      origin.navIntoHistorically(ReaderFragment.TAG) { ReaderFragment.newInstance(item) }
+//      origin.navIntoHistorically(ReaderFragment.TAG) { ReaderFragment.newInstance(item) }
+      origin.activity?.let {
+        origin.startActivity(ReaderActivity.intentFactory(it, item))
+      }
     }
   }
 
@@ -118,7 +126,7 @@ class ChaptersAdapter(
   }
 }
 
-class ChaptersViewModel @Inject constructor(val chaptersLive: ChaptersLive) : RxViewModel(chaptersLive.disposables)
+class ChaptersViewModel @Inject constructor(val chaptersLive: ChaptersLive) : RxMultiViewModel(chaptersLive.disposables)
 
 class ChaptersLive @Inject constructor(
   private val pluginManager: PluginManager,

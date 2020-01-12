@@ -4,11 +4,16 @@ import commons.android.dagger.ActivityScope
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import moe.baihumaru.android.ui.home.HomeActivity
-import moe.baihumaru.android.ui.home.HomeConstructModule
+import moe.baihumaru.android.ui.home.nav.HomeNavModule
+import moe.baihumaru.android.ui.reader.ReaderActivity
 
 @Module
 interface ActivityModule {
-  @ContributesAndroidInjector(modules = [HomeConstructModule::class])
+  @ContributesAndroidInjector(modules = [HomeNavModule::class])
   @ActivityScope
   fun home(): HomeActivity
+
+  @ContributesAndroidInjector
+  @ActivityScope
+  fun reader(): ReaderActivity
 }
