@@ -49,7 +49,7 @@ class CataloguesFragment : CoreNestedFragment<CataloguesFragmentBinding>(), SubN
     return CataloguesFragmentBinding.inflate(inflater, container, false)
   }
 
-  override fun contextualTitle() = getString(R.string.nav_catalogues)
+  override val contextualTitle by lazy { getString(R.string.nav_catalogues) }
 }
 
 data class UICatalogue(val id: String, val name: String) {

@@ -10,10 +10,7 @@ import moe.baihumaru.android.ui.home.nav.NavViewModel
 abstract class CoreActivity : DaggerActivity()
 
 interface TitledFragment {
-  /**
-   * Invoked after context is attached
-   */
-  fun contextualTitle(): String
+  val contextualTitle: String
 }
 
 abstract class CoreParentFragment<V : ViewBinding> : ViewBindingFragment<V>() {
@@ -50,7 +47,7 @@ abstract class CoreNestedFragment<V : ViewBinding> : ViewBindingFragment<V>(), T
         val parentId = resolveParentId()
         if (parentId == selectionLive.value) {
           with(currentActivity.viewModelOf(CrumbViewModel::class.java)) {
-            updateCurrentCrumb(parentId, contextualTitle())
+            updateCurrentCrumb(parentId, contextualTitle)
           }
         }
       }

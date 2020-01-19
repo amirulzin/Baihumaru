@@ -47,7 +47,7 @@ class PluginsFragment : CoreNestedFragment<PluginsFragmentBinding>() {
     return PluginsFragmentBinding.inflate(inflater, container, false)
   }
 
-  override fun contextualTitle() = getString(R.string.nav_plugins)
+  override val contextualTitle by lazy { getString(R.string.nav_plugins) }
 }
 
 @ViewLayer

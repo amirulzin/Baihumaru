@@ -62,7 +62,9 @@ class NovelsFragment : CoreNestedFragment<NovelsFragmentBinding>(), SubNavRoot {
     return NovelsFragmentBinding.inflate(inflater, container, false)
   }
 
-  override fun contextualTitle() = requireNotNull(arguments?.getString(KEY_PLUGIN_NAME))
+  override val contextualTitle by lazy {
+    requireNotNull(arguments?.getString(KEY_PLUGIN_NAME))
+  }
 }
 
 @ViewLayer

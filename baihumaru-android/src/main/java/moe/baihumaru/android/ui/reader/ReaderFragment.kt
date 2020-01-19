@@ -50,7 +50,7 @@ class ReaderFragment : CoreNestedFragment<ReaderFragmentBinding>() {
     return ReaderFragmentBinding.inflate(inflater, container, false)
   }
 
-  override fun contextualTitle() = getString(R.string.nav_reader)
+  override val contextualTitle by lazy { getString(R.string.nav_reader) }
 }
 
 @ViewLayer

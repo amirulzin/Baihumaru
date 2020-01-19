@@ -16,7 +16,6 @@ import commons.android.withParcel
 import io.reactivex.Single
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
-import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.ChaptersFragmentBinding
 import moe.baihumaru.android.databinding.ChaptersItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
@@ -54,8 +53,10 @@ class ChaptersFragment : CoreNestedFragment<ChaptersFragmentBinding>(), SubNavRo
     return ChaptersFragmentBinding.inflate(inflater, container, false)
   }
 
-  override fun contextualTitle() = getString(R.string.nav_chapters)
-
+  override val contextualTitle by lazy {
+    val novel: UINovel = fromParcel(KEY_NOVEL)
+    novel.novelId.title
+  }
 }
 
 @ViewLayer

@@ -42,9 +42,7 @@ class WebViewFragment : CoreNestedFragment<WebviewFragmentBinding>() {
     }
   }
 
-  override fun contextualTitle(): String {
-    return getString(R.string.app_name)
-  }
+  override val contextualTitle by lazy { getString(R.string.app_name) }
 
   class CompatWebViewClient @Inject constructor() : WebViewClient()
 }
