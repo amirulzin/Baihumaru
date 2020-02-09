@@ -14,7 +14,6 @@ import commons.android.dagger.arch.DaggerViewModelFactory
 import commons.android.viewbinding.recycler.SingleTypedViewBindingListAdapter
 import commons.android.viewbinding.recycler.TypedViewBindingViewHolder
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.addTo
 import io.reactivex.schedulers.Schedulers
 import moe.baihumaru.android.databinding.NovelsFragmentBinding
@@ -129,7 +128,6 @@ class NovelsAdapter(private val itemDelegate: ItemDelegate) : SingleTypedViewBin
 
 data class UINovels(val list: List<UINovel>)
 
-@Suppress("MemberVisibilityCanBePrivate")
 class NovelsViewModel @Inject constructor(
   val pluginId: PluginIdLive,
   val pageTraveler: PageTravelerLive,
@@ -144,9 +142,7 @@ class NovelsViewModel @Inject constructor(
   }
 }
 
-class NovelsRepository @Inject constructor(private val pluginManager: PluginManager) {
-  val disposables = CompositeDisposable()
-
+class NovelsRepository @Inject constructor(private val pluginManager: PluginManager) : RxRepository() {
   fun retrieve(pluginId: String?, pageTraveler: PageTraveler, liveData: MutableLiveData<UINovels>, stateLiveData: ResourceLiveData) {
     stateLiveData.postLoading()
     Single.fromCallable {
