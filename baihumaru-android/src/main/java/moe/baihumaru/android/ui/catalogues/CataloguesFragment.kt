@@ -21,6 +21,7 @@ import moe.baihumaru.android.databinding.CataloguesItemBinding
 import moe.baihumaru.android.navigation.SubNavRoot
 import moe.baihumaru.android.plugin.PluginManager
 import moe.baihumaru.android.ui.defaults.CoreNestedFragment
+import moe.baihumaru.android.ui.defaults.bindRefresh
 import moe.baihumaru.android.ui.novels.NovelsFragment
 import moe.baihumaru.core.Plugin
 import javax.inject.Inject
@@ -75,6 +76,10 @@ class CataloguesConstruct(
       adapter = CataloguesAdapter(itemDelegate)
     }
 
+    with(binding.refreshLayout) {
+      bindRefresh(origin.viewLifecycleOwner, vm.cataloguesLive)
+    }
+
     vm.cataloguesLive.observeNonNull(origin.viewLifecycleOwner, ::bindUpdates)
   }
 
@@ -93,7 +98,6 @@ class CataloguesAdapter(private val itemDelegate: ItemDelegate) : SingleTypedVie
       return oldItem == newItem
     }
   }
-
 
   class Holder(binding: CataloguesItemBinding, private val delegate: ItemDelegate) : TypedViewBindingViewHolder<UICatalogue, CataloguesItemBinding>(binding) {
     override fun bind(item: UICatalogue, position: Int) {
