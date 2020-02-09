@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebViewClient
 import androidx.core.os.bundleOf
 import moe.baihumaru.android.R
 import moe.baihumaru.android.databinding.WebviewFragmentBinding
@@ -17,9 +16,13 @@ class WebViewFragment : CoreNestedFragment<WebviewFragmentBinding>() {
   companion object {
     const val TAG = "web_view"
     private const val ARG_URL = "arg_url"
+    private const val ARG_TITLE = "arg_title"
     @JvmStatic
-    fun intentFactory(url: String) = WebViewFragment().apply {
-      arguments = bundleOf(ARG_URL to url)
+    fun intentFactory(url: String, title: String? = null) = WebViewFragment().apply {
+      arguments = bundleOf(
+        ARG_URL to url,
+        ARG_TITLE to title
+      )
     }
   }
 
@@ -42,7 +45,8 @@ class WebViewFragment : CoreNestedFragment<WebviewFragmentBinding>() {
     }
   }
 
-  override val contextualTitle by lazy { getString(R.string.app_name) }
+  override val contextualTitle by lazy {
+    arguments?.getString(ARG_TITLE) ?: getString(R.string.app_name)
+  }
 
-  class CompatWebViewClient @Inject constructor() : WebViewClient()
 }

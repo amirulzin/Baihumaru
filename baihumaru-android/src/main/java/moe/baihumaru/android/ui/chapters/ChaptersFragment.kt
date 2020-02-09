@@ -67,11 +67,9 @@ class ChaptersConstruct(
 ) : UIConstruct<UIChapters> {
   private val itemDelegate = object : ChaptersAdapter.ItemDelegate {
     override fun onChapterClick(item: UIChapterId) {
-//      origin.navIntoHistorically(ReaderFragment.TAG) { ReaderFragment.newInstance(item) }
       origin.activity?.let {
-        //origin.startActivity(ReaderActivity.intentFactory(it, item))
         item.url?.let { url ->
-          origin.navIntoHistorically(WebViewFragment.TAG) { WebViewFragment.intentFactory(url) }
+          origin.navIntoHistorically(WebViewFragment.TAG) { WebViewFragment.intentFactory(url, item.chapterId.title) }
         }
       }
     }
