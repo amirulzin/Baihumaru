@@ -45,14 +45,14 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
-//    buildFeatures {
-//        compose = false
-//        buildConfig = true
-//        viewBinding = true
-//    }
-    viewBinding {
-        enabled = true
+    buildFeatures {
+        compose = false
+        buildConfig = true
+        viewBinding = true
     }
+//    viewBinding {
+//        enabled = true
+//    }
     testOptions {
         unitTests {
             includeAndroidResources = true
@@ -72,8 +72,8 @@ dependencies {
     //Android baseline libs
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation "androidx.core:core-ktx:1.1.0"
-    implementation 'com.google.android.material:material:1.2.0-alpha03'
+    implementation "androidx.core:core-ktx:1.2.0"
+    implementation 'com.google.android.material:material:1.2.0-alpha04'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.preference:preference:1.1.0'
@@ -81,7 +81,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
 
-    def lifecycle_version = "2.2.0-rc03"
+    def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
 
@@ -90,12 +90,12 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    def nav_version = "2.2.0-rc04"
+    def nav_version = "2.2.1"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //DI
-    def dagger_version = "2.25.3"
+    def dagger_version = "2.26"
     implementation "com.google.dagger:dagger:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:dagger-android:$dagger_version"
